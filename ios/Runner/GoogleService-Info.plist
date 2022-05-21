@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1034284220561-6l52uo34ma5vluo5oleejo5g44jc4887.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1034284220561-6l52uo34ma5vluo5oleejo5g44jc4887</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1034284220561-mq61p13pa22qaquhd2013r0uknsa8rkt.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAqtdvs2U7LEJNBlcoltLAKPx4BehWKblI</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1034284220561</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.electricityApp</string>
+	<key>PROJECT_ID</key>
+	<string>elecetricty-calculator</string>
+	<key>STORAGE_BUCKET</key>
+	<string>elecetricty-calculator.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1034284220561:ios:07c7b6cb9574da433e3f30</string>
+</dict>
+</plist>
