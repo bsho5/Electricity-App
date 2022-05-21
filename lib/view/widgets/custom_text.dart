@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'dart:ui'as ui;
+import 'dart:ui' as ui;
+
 class CustomText extends StatelessWidget {
   CustomText({
     this.text = '',
     this.fontSize = 15,
     this.color = Colors.white,
-    this.fontWeight, this.alignment,
+    this.fontWeight,
+    this.alignment, this.textDirection,
   });
   final String? text;
   final double? fontSize;
   final Color? color;
   final FontWeight? fontWeight;
   final TextAlign? alignment;
+  final TextDirection? textDirection;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class CustomText extends StatelessWidget {
         style:
             TextStyle(fontSize: fontSize, color: color, fontWeight: fontWeight),
         textAlign: alignment,
-        
+        textDirection: textDirection,
       ),
     );
   }

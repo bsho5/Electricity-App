@@ -1,12 +1,14 @@
 import 'package:electricity_app/view/widgets/custom_button.dart';
 import 'package:electricity_app/view/widgets/custom_text.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 
 import 'my_home_page.dart';
 
 class ReasultPage extends StatelessWidget {
-  const ReasultPage(this.reasult);
-  final num reasult;
+  const ReasultPage(this.reasult, this.remoteConfig);
+   final double reasult;
+   final RemoteConfig remoteConfig;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,8 @@ class ReasultPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 50, right: 50),
             child: CustomText(
-              text: 'Your Electricity Usage is : $reasult kilowatt/hour',
+              text: 'استهلاكك للكهرباء هو : $reasult كيلو/الساعة',
+              textDirection: TextDirection.rtl,
               fontWeight: FontWeight.bold,
               fontSize: 20,
               color: Colors.black,
@@ -29,10 +32,13 @@ class ReasultPage extends StatelessWidget {
           ),
           CustomButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => MyHomePage()));
+               Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => MyHomePage(remoteConfig: remoteConfig,)));
+                
               },
-              text: 'Go Back')
+              text: 'ارجع للخلف')
         ],
       ),
     );

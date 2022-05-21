@@ -1,27 +1,28 @@
+import 'dart:convert';
+
 import 'package:electricity_app/view/screens/reasult_screen.dart';
 import 'package:electricity_app/view/widgets/custom_button.dart';
 import 'package:electricity_app/view/widgets/custom_text.dart';
 import 'package:electricity_app/view/widgets/custom_text_form_field.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:electricity_app/model/electricity_model.dart';
 
 import '../../constants.dart';
 
 class MyHomePage extends StatefulWidget {
+  MyHomePage({required this.remoteConfig});
+  final RemoteConfig remoteConfig;
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
   @override
-  final List<String> _items = [
-    'Ac Units :',
-    'Fridges :',
-    'Fans :',
-  ];
+  final List<String> _items = [];
 
-  final List<int> _numbers = [1, 2, 3];
+  final List<double> _numbers = [];
 
   final List<int> _numberOfUnits = [];
 
@@ -30,25 +31,40 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void insert() {
-    for (var i = 0; i < _items.length; i++) {
+    for (var i = 0;
+        i <
+            jsonDecode(widget.remoteConfig.getString("Data"))['products']
+                .length;
+        i++) {
+      _items.insert(
+          i,
+          jsonDecode(widget.remoteConfig.getString("Data"))['products'][i]
+                  ["name_ar"]
+              .toString());
+      _numbers.insert(
+          i,
+          jsonDecode(widget.remoteConfig.getString("Data"))['products'][i]["KW"]
+              .toDouble());
       _numberOfUnits.insert(i, 0);
       _numberOfHours.insert(i, 0);
     }
   }
 
-  num x = 0;
-  num calculate() {
+  double x = 0;
+  double calculate() {
     for (var i = 0; i < _items.length; i++) {
-      num y = _numberOfHours[i] * _numberOfUnits[i] * _numbers[i];
+      double y = _numberOfHours[i] * _numberOfUnits[i] * _numbers[i];
       x = y + x;
     }
-    print(x);
-    return x;
+
+    return 
+    double.parse((x).toStringAsFixed(1));
   }
 
   @override
   void initState() {
     insert();
+
     super.initState();
   }
 
@@ -56,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('The Electricity App'),
+          title: Text('Electricity Calculator'),
         ),
         body: Column(
           children: [
@@ -64,9 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: SizedBox(
                 height: 1000,
                 child: GridView.count(
-               
-
-                  childAspectRatio: 0.9,
+                  childAspectRatio: 0.7,
                   // crossAxisCount is the number of columns
                   crossAxisCount: 2,
                   // This creates two columns with two items in each column
@@ -74,8 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
-                        height: 100,
-                        width: 100,
+                          height: 100,
+                          width: 100,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: primaryColor,
@@ -84,23 +98,49 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                CustomText(
-                                  text: _items[index],
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    SizedBox(
+                                      width: 20,
+                                      height: 10,
+                                    ),
+                                    Expanded(
+                                      child: CustomText(
+                                        text: _items[index],
+                                        textDirection: TextDirection.ltr,
+                                        color: Colors.white,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                CustomText(
-                                  text: 'the number of units :',
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    CustomText(
+                                      text: 'عدد الاجهزة :',
+                                      textDirection: TextDirection.rtl,
+                                      fontSize: 20,
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(
                                   height: 5,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 8.0,bottom: 8.0,),
+                                  padding: const EdgeInsets.only(
+                                    top: 8.0,
+                                    bottom: 8.0,
+                                  ),
                                   child: Container(
                                     width: 110,
                                     decoration: BoxDecoration(
@@ -129,7 +169,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         .removeAt(index);
                                                     _numberOfUnits.insert(
                                                         index, x);
-                                                    print(_numberOfUnits);
                                                   });
                                                 }
                                               },
@@ -164,7 +203,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                                       .removeAt(index);
                                                   _numberOfUnits.insert(
                                                       index, x);
-                                                  print(_numberOfUnits);
                                                 });
                                               },
                                             ),
@@ -177,16 +215,26 @@ class _MyHomePageState extends State<MyHomePage> {
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                CustomText(
-                                  text: 'the number of hours :',
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    CustomText(
+                                      text: 'عدد الساعات :',
+                                      textDirection: TextDirection.rtl,
+                                      fontSize: 20,
+                                    ),
+                                  ],
                                 ),
                                 const SizedBox(
                                   height: 5,
                                 ),
                                 Padding(
-                                 padding: const EdgeInsets.only(top: 8.0,bottom: 8.0,),
+                                  padding: const EdgeInsets.only(
+                                    top: 8.0,
+                                    bottom: 8.0,
+                                  ),
                                   child: Container(
-                                     width: 110,
+                                    width: 110,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
                                       color: Colors.white,
@@ -213,7 +261,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         .removeAt(index);
                                                     _numberOfHours.insert(
                                                         index, x);
-                                                    print(_numberOfHours);
                                                   });
                                                 }
                                               },
@@ -248,7 +295,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                                       .removeAt(index);
                                                   _numberOfHours.insert(
                                                       index, x);
-                                                  print(_numberOfHours);
                                                 });
                                               },
                                             ),
@@ -271,18 +317,23 @@ class _MyHomePageState extends State<MyHomePage> {
               child: CustomButton(
                   onPressed: () {
                     calculate();
-                    Navigator.pushAndRemoveUntil<dynamic>(
-                      context,
-                      MaterialPageRoute<dynamic>(
-                        builder: (BuildContext context) => ReasultPage(x),
-                      ),
-                      (route) => false,
-                    );
+
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                ReasultPage(x, widget.remoteConfig)));
+                    // Navigator.pushAndRemoveUntil<dynamic>(
+                    //   context,
+                    //   MaterialPageRoute<dynamic>(
+                    //     builder: (BuildContext context) => ReasultPage(x),
+                    //   ),
+                    //   (route) => false,
+                    // );
                   },
-                  text: 'text'),
+                  text: 'النتيجة'),
             )
           ],
         ));
   }
 }
-
